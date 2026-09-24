@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\PrenatalCheckup;
 
 
+
 class Mother extends Model
 {
     protected $fillable = [

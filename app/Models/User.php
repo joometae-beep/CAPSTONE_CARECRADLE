@@ -45,4 +45,18 @@ protected $fillable = [
     {
         return $this->hasOne(Mother::class);
     }
+    public function isAdministrator()
+{
+    return $this->role === 'Administrator';
+}
+
+public function isMidwife()
+{
+    return $this->role === 'Midwife';
+}
+
+public function isMother()
+{
+    return $this->role === 'Mother';
+}
 }

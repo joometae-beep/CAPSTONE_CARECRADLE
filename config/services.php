@@ -28,16 +28,19 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
-    'slack' => [
+        'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+
     'textbee' => [
-        'api_key'   => env('TEXTBEE_API_KEY'),
+        'api_key' => env('TEXTBEE_API_KEY'),
         'device_id' => env('TEXTBEE_DEVICE_ID'),
-        'base_url'  => env('TEXTBEE_BASE_URL', 'https://api.textbee.dev'),
+        'base_url' => env('TEXTBEE_BASE_URL'),
     ],
 
 ];
+
+
