@@ -9,29 +9,22 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-
-            $table->string('first_name')->after('username');
-
+            $table->string('first_name')->nullable()->after('username');
             $table->string('middle_name')->nullable()->after('first_name');
-
-            $table->string('last_name')()->after('middle_name');
-
+            $table->string('last_name')->nullable()->after('middle_name');
             $table->string('contact_number')->nullable()->after('last_name');
-
         });
     }
 
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-
             $table->dropColumn([
                 'first_name',
                 'middle_name',
                 'last_name',
-                'contact_number'
+                'contact_number',
             ]);
-
         });
     }
 };
