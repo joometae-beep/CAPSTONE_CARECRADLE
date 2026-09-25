@@ -7,6 +7,8 @@ use App\Models\Mother;
 use App\Models\User;
 use App\Http\Requests\StoreMotherRequest;
 use App\Http\Requests\UpdateMotherRequest;
+use App\Models\Appointment;
+use App\Models\Infant;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -17,9 +19,26 @@ class MotherController extends Controller
      */
     public function index()
     {
-        $mothers = Mother::latest()->get();
+        $status = request('status');
 
-        return view('admin.mothers.index', compact('mothers'));
+        $query = Mother::latest();
+        if ($status && $status !== 'All') {
+            $query->where('status', $status);
+            }
+            
+            $mothers = $query->paginate(10);
+            $totalMothers = Mother::count();
+            $pregnantMothers = Mother::where('status', 'Pregnant')->count();
+            $deliveredMothers = Mother::where('status', 'Delivered')->count();
+            $referredMothers = Mother::where('status', 'Referred')->count();
+            $upcomingAppointments = Appointment::where('appointment_date', '>=', now())->count();
+            $totalInfants = Infant::count();
+            
+            return view('admin.mothers.index', compact(
+                'mothers', 'status', 'totalMothers', 'pregnantMothers',
+                'deliveredMothers', 'referredMothers', 'upcomingAppointments', 'totalInfants'
+                ));
+                
     }
 
     /**
