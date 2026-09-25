@@ -18,28 +18,41 @@ class MotherController extends Controller
      * Display a listing of mothers.
      */
     public function index()
-    {
-        $status = request('status');
+{
+    $status = request('status');
+    $search = request('search');
 
-        $query = Mother::latest();
-        if ($status && $status !== 'All') {
-            $query->where('status', $status);
-            }
-            
-            $mothers = $query->paginate(10);
-            $totalMothers = Mother::count();
-            $pregnantMothers = Mother::where('status', 'Pregnant')->count();
-            $deliveredMothers = Mother::where('status', 'Delivered')->count();
-            $referredMothers = Mother::where('status', 'Referred')->count();
-            $upcomingAppointments = Appointment::where('appointment_date', '>=', now())->count();
-            $totalInfants = Infant::count();
-            
-            return view('admin.mothers.index', compact(
-                'mothers', 'status', 'totalMothers', 'pregnantMothers',
-                'deliveredMothers', 'referredMothers', 'upcomingAppointments', 'totalInfants'
-                ));
-                
+    $query = Mother::latest();
+
+    if ($status && $status !== 'All') {
+        $query->where('status', $status);
     }
+
+    if ($search) {
+        $query->where(function ($q) use ($search) {
+            $q->where('first_name', 'like', "%{$search}%")
+              ->orWhere('last_name', 'like', "%{$search}%")
+              ->orWhere('mother_code', 'like', "%{$search}%")
+              ->orWhere('barangay', 'like', "%{$search}%")
+              ->orWhere('contact_number', 'like', "%{$search}%")
+              ->orWhere('status', 'like', "%{$search}%");
+        });
+    }
+
+    $mothers = $query->paginate(10);
+
+    $totalMothers = Mother::count();
+    $pregnantMothers = Mother::where('status', 'Pregnant')->count();
+    $deliveredMothers = Mother::where('status', 'Delivered')->count();
+    $referredMothers = Mother::where('status', 'Referred')->count();
+    $upcomingAppointments = Appointment::where('appointment_date', '>=', now())->count();
+    $totalInfants = Infant::count();
+
+    return view('admin.mothers.index', compact(
+        'mothers', 'status', 'search', 'totalMothers', 'pregnantMothers',
+        'deliveredMothers', 'referredMothers', 'upcomingAppointments', 'totalInfants'
+    ));
+}
 
     /**
      * Show the form for creating a new mother.
