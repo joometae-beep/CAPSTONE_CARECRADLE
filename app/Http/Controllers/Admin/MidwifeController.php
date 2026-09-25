@@ -17,8 +17,9 @@ class MidwifeController extends Controller
     public function index()
     {
         $midwives = User::where('role', 'Midwife')->get();
+        $totalMidwives = $midwives->count();
 
-        return view('admin.midwives.index', compact('midwives'));
+        return view('admin.midwives.index', compact('midwives', 'totalMidwives'));
     }
 
     /**
