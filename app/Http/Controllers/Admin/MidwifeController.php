@@ -18,10 +18,11 @@ class MidwifeController extends Controller
     {
         $midwives = User::where('role', 'Midwife')->get();
         $totalMidwives = $midwives->count();
-
-        return view('admin.midwives.index', compact('midwives', 'totalMidwives'));
+        $activeMidwives = $midwives->where('is_active', true)->count();
+        $inactiveMidwives = $midwives->where('is_active', false)->count();
+        
+        return view('admin.midwives.index', compact('midwives', 'totalMidwives', 'activeMidwives', 'inactiveMidwives'));
     }
-
     /**
      * Show the form for creating a new midwife.
      */
