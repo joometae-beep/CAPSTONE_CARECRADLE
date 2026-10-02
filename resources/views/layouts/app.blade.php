@@ -13,10 +13,29 @@
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
         <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @vite([
+            'resources/css/app.css',
+            'resources/css/carecradle.css',
+            'resources/css/mother-management.css',
+            'resources/css/mother-profile.css',
+            'resources/css/mother-edit.css',
+            'resources/css/sms-notifications.css',
+            'resources/css/sms-notification-show.css',
+            'resources/css/prenatal-visit-show.css',
+            'resources/css/prenatal-create.css',
+            'resources/css/prenatal-visit-edit.css',
+            'resources/css/appointment-details.css',
+            'resources/css/appointment-edit.css',
+            'resources/css/carecradle-background.css',
+             'resources/css/midwife-management.css',
+            'resources/js/app.js'
+        ])
     </head>
+
     <body class="font-sans antialiased" style="font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;">
-        <div class="min-h-screen bg-[#FFF8FA]">
+
+        <div class="min-h-screen">
+
             @include('layouts.navigation')
 
             <!-- Page Heading -->
@@ -32,6 +51,8 @@
             <main>
                 {{ $slot }}
             </main>
+
         </div>
+
     </body>
 </html>

@@ -7,52 +7,71 @@ use App\Models\Mother;
 use App\Models\User;
 use App\Http\Requests\StoreMotherRequest;
 use App\Http\Requests\UpdateMotherRequest;
-use App\Models\Appointment;
-use App\Models\Infant;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Infant;
+use App\Models\Appointment;
 
 class MotherController extends Controller
 {
     /**
      * Display a listing of mothers.
      */
-    public function index()
-{
-    $status = request('status');
-    $search = request('search');
+        public function index()
+    {
+        $search = request('search');
+        $status = request('status');
 
-    $query = Mother::latest();
+    // Dashboard Statistics (Always Total Records — unaffected by filters)
+$totalMothers = Mother::count();
 
-    if ($status && $status !== 'All') {
-        $query->where('status', $status);
+$pregnantMothers = Mother::where('status', 'Pregnant')->count();
+
+$deliveredMothers = Mother::where('status', 'Delivered')->count();
+
+$referredMothers = Mother::where('status', 'Referred')->count();
+
+$totalInfants = Infant::count();
+
+$upcomingAppointments = Appointment::where('status', 'Scheduled')
+    ->whereDate('appointment_date', '>=', today())
+    ->count();
+
+    // Search + Status Filter Results
+    $mothers = Mother::query()
+
+        ->when($search, function ($query) use ($search) {
+
+            $query->where('mother_code', 'like', "%{$search}%")
+                ->orWhere('first_name', 'like', "%{$search}%")
+                ->orWhere('middle_name', 'like', "%{$search}%")
+                ->orWhere('last_name', 'like', "%{$search}%")
+                ->orWhere('barangay', 'like', "%{$search}%")
+                ->orWhere('contact_number', 'like', "%{$search}%")
+                ->orWhere('status', 'like', "%{$search}%");
+
+        })
+
+        ->when($status && $status !== 'All', function ($query) use ($status) {
+
+            $query->where('status', $status);
+
+        })
+
+        ->latest()
+        ->get();
+return view('admin.mothers.index', compact(
+    'mothers',
+    'search',
+    'status',
+    'totalMothers',
+    'pregnantMothers',
+    'deliveredMothers',
+    'referredMothers',
+    'totalInfants',
+    'upcomingAppointments'
+));
     }
-
-    if ($search) {
-        $query->where(function ($q) use ($search) {
-            $q->where('first_name', 'like', "%{$search}%")
-              ->orWhere('last_name', 'like', "%{$search}%")
-              ->orWhere('mother_code', 'like', "%{$search}%")
-              ->orWhere('barangay', 'like', "%{$search}%")
-              ->orWhere('contact_number', 'like', "%{$search}%")
-              ->orWhere('status', 'like', "%{$search}%");
-        });
-    }
-
-    $mothers = $query->paginate(10);
-
-    $totalMothers = Mother::count();
-    $pregnantMothers = Mother::where('status', 'Pregnant')->count();
-    $deliveredMothers = Mother::where('status', 'Delivered')->count();
-    $referredMothers = Mother::where('status', 'Referred')->count();
-    $upcomingAppointments = Appointment::where('appointment_date', '>=', now())->count();
-    $totalInfants = Infant::count();
-
-    return view('admin.mothers.index', compact(
-        'mothers', 'status', 'search', 'totalMothers', 'pregnantMothers',
-        'deliveredMothers', 'referredMothers', 'upcomingAppointments', 'totalInfants'
-    ));
-}
 
     /**
      * Show the form for creating a new mother.
@@ -165,7 +184,15 @@ class MotherController extends Controller
      */
     public function show(string $id)
     {
-         $mother = Mother::with('prenatalCheckups')->findOrFail($id);
+         $mother = Mother::with([
+
+        'prenatalCheckups',
+
+        'appointments',
+
+        'infants'
+
+    ])->findOrFail($id);
 
     return view('admin.mothers.show', compact('mother'));
     }
@@ -254,6 +281,35 @@ class MotherController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+          $mother = Mother::findOrFail($id);
+
+    DB::transaction(function () use ($mother) {
+
+        // Delete SMS Notifications
+        $mother->smsNotifications()->delete();
+
+        // Delete Appointments
+        $mother->appointments()->delete();
+
+        // Delete Prenatal Visits
+        $mother->prenatalCheckups()->delete();
+
+        // Delete Medical Logs
+        $mother->medicalLogs()->delete();
+
+        // Delete Infants
+        $mother->infants()->delete();
+
+        // Delete linked User Account
+        $mother->user()->delete();
+
+        // Finally delete Mother
+        $mother->delete();
+
+    });
+
+    return redirect()
+        ->route('mothers.index')
+        ->with('success', 'Mother deleted successfully!');
     }
 }

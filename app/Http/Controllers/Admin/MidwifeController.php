@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\StoreMidwifeRequest;
 use App\Http\Requests\UpdateMidwifeRequest;
+use App\Models\Infant;
+use App\Models\Appointment;
 
 class MidwifeController extends Controller
 {
@@ -16,13 +18,48 @@ class MidwifeController extends Controller
      */
     public function index()
     {
-        $midwives = User::where('role', 'Midwife')->get();
-        $totalMidwives = $midwives->count();
-        $activeMidwives = $midwives->where('is_active', true)->count();
-        $inactiveMidwives = $midwives->where('is_active', false)->count();
-        
-        return view('admin.midwives.index', compact('midwives', 'totalMidwives', 'activeMidwives', 'inactiveMidwives'));
+        $search = request('search');
+
+    // Dashboard Statistics
+    $totalMidwives = User::where('role', 'Midwife')->count();
+    $activeMidwives = User::where('role', 'Midwife')
+        ->where('is_active', true)
+        ->count();
+
+    $inactiveMidwives = User::where('role', 'Midwife')
+        ->where('is_active', false)
+        ->count();
+
+    // Search Results
+    $midwives = User::where('role', 'Midwife')
+
+        ->when($search, function ($query) use ($search) {
+
+            $query->where(function ($q) use ($search) {
+
+                $q->where('username', 'like', "%{$search}%")
+                    ->orWhere('first_name', 'like', "%{$search}%")
+                    ->orWhere('middle_name', 'like', "%{$search}%")
+                    ->orWhere('last_name', 'like', "%{$search}%")
+                    ->orWhere('contact_number', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+
+            });
+
+        })
+
+        ->latest()
+        ->get();
+
+    return view('admin.midwives.index', compact(
+        'midwives',
+        'search',
+        'totalMidwives',
+        'activeMidwives',
+        'inactiveMidwives'
+    ));
     }
+
     /**
      * Show the form for creating a new midwife.
      */

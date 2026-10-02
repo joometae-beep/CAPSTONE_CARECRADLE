@@ -14,10 +14,10 @@
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        <div class="flex justify-between h-16">
+        <div class="flex justify-between items-center h-16">
 
             <!-- Left Side -->
-            <div class="flex">
+            <div class="flex items-center">
 
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
@@ -130,12 +130,14 @@
 
             </div>
 
-            <!-- Hamburger -->
-            <div class="-me-2 flex items-center sm:hidden">
+            <!-- Hamburger (Improved placement & styling for mobile) -->
+            <div class="flex items-center sm:hidden">
 
                 <button
                     @click="{{ $hamburgerClick }}"
-                    class="inline-flex items-center justify-center p-2 rounded-xl text-slate-500 hover:bg-pink-50 hover:text-pink-600 focus:outline-none focus:ring-4 focus:ring-pink-100 transition">
+                    type="button"
+                    aria-label="Open navigation menu"
+                    class="inline-flex h-11 w-11 items-center justify-center rounded-xl text-slate-600 hover:bg-pink-50 hover:text-pink-600 focus:bg-pink-50 focus:text-pink-600 focus:outline-none focus:ring-4 focus:ring-pink-100 transition duration-150 ease-in-out">
 
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
 
@@ -166,15 +168,7 @@
     </div>
 
     {{-- ====================================== --}}
-    {{-- Every role now uses its own slide-out drawer (Administrator, --}}
-    {{-- Midwife, Mother), so the old bottom accordion panel had no --}}
-    {{-- remaining content and has been removed. --}}
-    {{-- ====================================== --}}
-
-    {{-- ====================================== --}}
     {{-- ADMINISTRATOR PORTAL — LEFT SLIDE-OUT DRAWER --}}
-    {{-- Works identically on mobile and desktop; triggered by the --}}
-    {{-- "Menu" button above or the mobile hamburger. --}}
     {{-- ====================================== --}}
 
     @if($user->isAdministrator())
@@ -498,7 +492,6 @@
                     'icon' => 'M15.75 11.25a3.75 3.75 0 1 0-7.5 0v.75A2.25 2.25 0 0 1 6 14.25v1.5A2.25 2.25 0 0 0 8.25 18h7.5A2.25 2.25 0 0 0 18 15.75v-1.5A2.25 2.25 0 0 1 15.75 12v-.75Z',
                     'icon2' => 'M12 3.75v1.5',
                 ],
-               
                 [
                     'label' => 'SMS History',
                     'route' => 'mother.sms-history',
