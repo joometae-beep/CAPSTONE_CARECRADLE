@@ -1,0 +1,365 @@
+/* =========================================================
+   CARECRADLE — SOFT ANIMATED BACKGROUND
+   Modern • Calm • Healthcare • Pink
+   ========================================================= */
+
+:root {
+    --cc-bg: #fff8fa;
+
+    --cc-pink: rgba(244, 114, 182, 0.12);
+    --cc-pink-soft: rgba(251, 207, 232, 0.34);
+    --cc-rose: rgba(236, 72, 153, 0.06);
+
+    --cc-dot: rgba(190, 24, 93, 0.045);
+}
+
+/* =========================================================
+   PAGE BACKGROUND
+   ========================================================= */
+
+html {
+    min-height: 100%;
+    background: var(--cc-bg);
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    position: relative;
+    overflow-x: hidden;
+
+    background-color: var(--cc-bg);
+
+    background-image:
+        /* Fine dot texture */
+        radial-gradient(
+            var(--cc-dot) 1px,
+            transparent 1px
+        ),
+
+        /* Top-left soft glow */
+        radial-gradient(
+            circle at 5% 5%,
+            var(--cc-pink),
+            transparent 27%
+        ),
+
+        /* Top-right soft glow */
+        radial-gradient(
+            circle at 95% 12%,
+            var(--cc-pink-soft),
+            transparent 30%
+        ),
+
+        /* Bottom-right subtle glow */
+        radial-gradient(
+            circle at 88% 92%,
+            var(--cc-rose),
+            transparent 30%
+        ),
+
+        /* Very subtle center light */
+        radial-gradient(
+            circle at 50% 45%,
+            rgba(255, 255, 255, 0.55),
+            transparent 48%
+        );
+
+    background-size:
+        30px 30px,
+        auto,
+        auto,
+        auto,
+        auto;
+
+    background-position:
+        0 0,
+        0 0,
+        0 0,
+        0 0,
+        0 0;
+}
+
+
+/* =========================================================
+   FLOATING BLOBS
+   ========================================================= */
+
+body::before,
+body::after {
+    content: "";
+
+    position: fixed;
+
+    width: 340px;
+    height: 340px;
+
+    border-radius: 50%;
+
+    pointer-events: none;
+    z-index: -1;
+
+    filter: blur(95px);
+
+    will-change: transform, opacity;
+}
+
+
+/* =========================================================
+   LEFT FLOATING GLOW
+   ========================================================= */
+
+body::before {
+    top: 3%;
+    left: -170px;
+
+    background: rgba(244, 114, 182, 0.11);
+
+    animation:
+        cc-float-left 16s ease-in-out infinite,
+        cc-pulse 10s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   RIGHT FLOATING GLOW
+   ========================================================= */
+
+body::after {
+    right: -170px;
+    bottom: 2%;
+
+    background: rgba(251, 207, 232, 0.38);
+
+    animation:
+        cc-float-right 19s ease-in-out infinite,
+        cc-pulse 12s ease-in-out infinite reverse;
+}
+
+
+/* =========================================================
+   LEFT BLOB MOVEMENT
+   ========================================================= */
+
+@keyframes cc-float-left {
+
+    0% {
+        transform: translate(0, 0);
+    }
+
+    50% {
+        transform: translate(70px, 40px);
+    }
+
+    100% {
+        transform: translate(0, 0);
+    }
+}
+
+
+/* =========================================================
+   RIGHT BLOB MOVEMENT
+   ========================================================= */
+
+@keyframes cc-float-right {
+
+    0% {
+        transform: translate(0, 0);
+    }
+
+    50% {
+        transform: translate(-60px, -45px);
+    }
+
+    100% {
+        transform: translate(0, 0);
+    }
+}
+
+
+/* =========================================================
+   SOFT PULSE
+   ========================================================= */
+
+@keyframes cc-pulse {
+
+    0% {
+        opacity: 0.7;
+        scale: 1;
+    }
+
+    50% {
+        opacity: 1;
+        scale: 1.06;
+    }
+
+    100% {
+        opacity: 0.7;
+        scale: 1;
+    }
+}
+
+
+/* =========================================================
+   DECORATIVE BACKGROUND LAYER
+   ========================================================= */
+
+.cc-background-layer {
+    position: fixed;
+    inset: 0;
+
+    pointer-events: none;
+    z-index: -1;
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   LARGE SOFT RING
+   ========================================================= */
+
+.cc-background-layer::before {
+    content: "";
+
+    position: absolute;
+
+    width: 220px;
+    height: 220px;
+
+    top: 35%;
+    right: 8%;
+
+    border: 1px solid rgba(190, 24, 93, 0.04);
+
+    border-radius: 50%;
+
+    box-shadow:
+        0 0 0 35px rgba(190, 24, 93, 0.015),
+        0 0 0 70px rgba(190, 24, 93, 0.009);
+
+    animation:
+        cc-circle-float 20s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   SECONDARY DECORATIVE RING
+   ========================================================= */
+
+.cc-background-layer::after {
+    content: "";
+
+    position: absolute;
+
+    width: 140px;
+    height: 140px;
+
+    left: 7%;
+    bottom: 15%;
+
+    border: 1px solid rgba(236, 72, 153, 0.035);
+
+    border-radius: 50%;
+
+    box-shadow:
+        0 0 0 24px rgba(236, 72, 153, 0.012),
+        0 0 0 48px rgba(236, 72, 153, 0.008);
+
+    animation:
+        cc-small-circle-float 15s ease-in-out infinite reverse;
+}
+
+
+/* =========================================================
+   LARGE RING MOTION
+   ========================================================= */
+
+@keyframes cc-circle-float {
+
+    0% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-18px) rotate(6deg);
+    }
+
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+}
+
+
+/* =========================================================
+   SMALL RING MOTION
+   ========================================================= */
+
+@keyframes cc-small-circle-float {
+
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    50% {
+        transform: translate(15px, -15px) rotate(-5deg);
+    }
+
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 640px) {
+
+    body::before,
+    body::after {
+        width: 240px;
+        height: 240px;
+
+        filter: blur(75px);
+    }
+
+    body {
+        background-size:
+            24px 24px,
+            auto,
+            auto,
+            auto,
+            auto;
+    }
+
+    .cc-background-layer::before {
+        width: 160px;
+        height: 160px;
+
+        right: -20px;
+    }
+
+    .cc-background-layer::after {
+        width: 100px;
+        height: 100px;
+
+        left: -20px;
+    }
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    body::before,
+    body::after,
+    .cc-background-layer::before,
+    .cc-background-layer::after {
+        animation: none;
+    }
+}
